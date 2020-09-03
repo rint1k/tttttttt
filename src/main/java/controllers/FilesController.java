@@ -1,5 +1,7 @@
 package controllers;
 
+import dto.Filter;
+import models.FileInfo;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,13 +17,14 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Controller
 @MultipartConfig
 public class FilesController {
 
     @Autowired
-    private FilesService  filesService;
+    private FilesService filesService;
 
     @RequestMapping("/files")
     public ModelAndView getMainPage() {
@@ -45,6 +48,20 @@ public class FilesController {
         filesService.save(multipartFile);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("upload1");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
+    public ModelAndView findByFilter(@RequestParam("fileName") String fileName, @RequestParam("author") String author) {
+        if (fileName == null) {
+            fileName = "";
+        }
+        if (author == null) {
+            author = "";
+        }
+        List<FileInfo> fileInfos = filesService.findByFilter(Filter.builder().fileName(fileName).author(author).build());
+        ModelAndView modelAndView = new ModelAndView("find");
+        modelAndView.addObject(fileInfos);
         return modelAndView;
     }
 }

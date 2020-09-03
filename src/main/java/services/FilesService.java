@@ -1,5 +1,6 @@
 package services;
 
+import dto.Filter;
 import models.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,5 +15,6 @@ public interface FilesService {
     FileInfo save(MultipartFile file);
     void delete(Long id);
     Optional<File> findByName(String name);
-    public InputStream getInputStreamByName(String filename);
+    InputStream getInputStreamByName(String filename);
+    List<FileInfo> findByFilter(Filter filter);
 }

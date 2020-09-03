@@ -22,6 +22,8 @@ public class FilesRepositoryImpl implements FilesRepository {
     private final String INSERT_FILE_SQL = "insert into files (`name`, uploadUser, `size`, path, state, `mime-type`, extention, originalName) VALUE (?, ?, ?, ?, ?, ?, ?, ?)";
     //language=SQL
     private final String DELETE_FILE_SQL = "DELETE from files where id = ?";
+    //language=SQL
+    private final String FIND_FILE_BY_ORIGINAL_NAME_OR_AUTHOR = "select * from files where originalName LIKE ? or uploadUser LIKE ?";
 
     private final String urlBegin = "/files/";
 
@@ -59,5 +61,10 @@ public class FilesRepositoryImpl implements FilesRepository {
     @Override
     public Optional<FileInfo> findFileByName(String name) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(FIND_FILE_BY_NAME_SQL, new Object[]{name}, fileInfoRowMapper));
+    }
+
+    @Override
+    public List<FileInfo> findByOriginalNameOrAuthor(String originalFileName, String author) {
+        return jdbcTemplate.query(FIND_FILE_BY_ORIGINAL_NAME_OR_AUTHOR, fileInfoRowMapper);
     }
 }

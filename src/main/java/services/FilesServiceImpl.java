@@ -1,5 +1,6 @@
 package services;
 
+import dto.Filter;
 import models.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -69,6 +70,11 @@ public class FilesServiceImpl implements FilesService {
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    @Override
+    public List<FileInfo> findByFilter(Filter filter) {
+        return filesRepository.findByOriginalNameOrAuthor("%" + filter.getFileName() + "%", "%" + filter.getAuthor() + "%");
     }
 
     @Override
